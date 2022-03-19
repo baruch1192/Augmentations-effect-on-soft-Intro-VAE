@@ -85,14 +85,31 @@ MNIST -    `python main.py --dataset mnist --device 0 --lr 2e-4 --num_epochs 500
 ## Method Overview
 The code in this repository includes implementations of several adjustable regularization methods:
 * Dropout in different layers of the encoder and decoder
-* Gaussian noise added to the original data or to intermediate layers of the encoder and decoder.
+* Gaussian noise added to the original data or to intermediate layers of the encoder and decoder
 * Label switching (Real <-> Fake)
 * Differentiable data augmentations
 
+The method that has achieved the most significant improvement in the FID score was data augmentation.
 
+**Differentiable Data Augmentation** <br>
+We used [kornia](https://kornia.github.io/) for the implementation of differentiable augmentations to the data by incorporating them as initial layers in the encoder module. We applied them on both real and fake data in all training stages, as proposed in ["Differentiable augmentation for data-efficient gan training.", by Zhao, Shengyu, et al.](https://arxiv.org/abs/2006.10738) and portrayed in the following figure (applied in (i), (ii) and (iii)):
+
+<p align="center">
+  <img src="figs/model_scheme.png" width="900">
+</p>
+
+The augmentations that worked best for us and were applied with a probability of 0.5 were:
+* random cutout - block of up to half the size of the image
+* random translation - of up to 1/8 of the width/height of the image
+
+We based our choice on our own trials and on ["Training generative adversarial networks with limited data.", by Karras, Tero, et al.](https://arxiv.org/abs/2006.06676). An important difference in our setting is that the model has access to the original images through the reconstruction loss calculation, making it robust to augmentations leaking to the generated data.
+
+We believe there were two main sources for this method's success in this setting:
+* The augmentations enrich our dataset (CIFAR-10 is a low data benchmark based on "Training generative adversarial networks with limited data.").
+* As both augmentations we used effectively delete blocks of pixels from the image, they also act as a regularization, creating a better balance between the two competing modules.
 
 ## Results
-All of the results can be conveniently reproduced using the provided `S_IntroVAE_Analysis.ipynb` notebook by loading trained models from checkpoints and running the relevant cells.
+All of the results can be conveniently produced using the provided `S_IntroVAE_Analysis.ipynb` notebook by loading trained models from checkpoints and running the relevant cells.
 
 <h4 align="center">
     <a href="https://colab.research.google.com/github/baruch1192/augmentation-enhanced-Soft-Intro-VAE"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
@@ -103,10 +120,38 @@ All of the results can be conveniently reproduced using the provided `S_IntroVAE
 | FID score on CIFAR-10 | 4.30     | 2.96 | 2.10             |
 
 ### Generation
+We improved the Fréchet inception distance (FID) score on CIFAR-10 from 4.30 to 2.96.
+
+<p align="center">
+  <img src="figs/model_scheme.png" width="900">
+</p>
 
 ### Reconstruction
+We were able to maintain good reconstruction although generation significantly improved.
+
+<p align="center">
+  <img src="figs/model_scheme.png" width="900">
+</p>
+
+**In-Painting** <br>
+A downstream task our model performs well due to how it was trained is reconstructing images with missing blocks by encoding and then decoding them.
+
+<p align="center">
+  <img src="figs/model_scheme.png" width="900">
+</p>
+
+Our model is much more robust to this kind of noise.
 
 ### Interpolation in the Latent Space
+Interpolation between two images in the latent space by decoding `z = z1 * (1-t) + z2 * t` for several values of `0 < t < 1`.
+
+<p align="center">
+  <img src="figs/model_scheme.png" width="900">
+</p>
+
+<p align="center">
+  <img src="figs/model_scheme.png" width="900">
+</p>
 
 ## Files and Directories in the Repository
 
@@ -133,7 +178,5 @@ All of the results can be conveniently reproduced using the provided `S_IntroVAE
 
 ## Credits
 * [Daniel, Tal, and Aviv Tamar. "Soft-IntroVAE: Analyzing and Improving the Introspective Variational Autoencoder." Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2021.](https://arxiv.org/abs/2012.13253)
-
-
-
-
+* [Zhao, Shengyu, et al. "Differentiable augmentation for data-efficient gan training." Advances in Neural Information Processing Systems 33 (2020): 7559-7570.](https://arxiv.org/abs/2006.10738)
+* [Karras, Tero, et al. "Training generative adversarial networks with limited data." Advances in Neural Information Processing Systems 33 (2020): 12104-12114.](https://arxiv.org/abs/2006.06676)
