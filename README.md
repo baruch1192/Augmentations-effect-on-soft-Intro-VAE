@@ -112,7 +112,7 @@ We believe there were two main sources for this method's success in this setting
 All of the results can be conveniently produced using the provided `S_IntroVAE_Analysis.ipynb` notebook by loading trained models from checkpoints and running the relevant cells.
 
 <h4 align="center">
-    <a href="https://colab.research.google.com/github/baruch1192/augmentation-enhanced-Soft-Intro-VAE"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+    <a href="https://colab.research.google.com/github/baruch1192/augmentation-enhanced-Soft-Intro-VAE/analysis"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 </h4>
 
 |                       | Baseline | Ours | SOTA (June 2021) |
@@ -150,7 +150,7 @@ A downstream task our model performs well due to how it was trained is reconstru
 Our model is much more robust to this kind of noise.
 
 ### Interpolation in the Latent Space
-Interpolation between two images in the latent space by decoding `z = z1 * (1-t) + z2 * t` for several values of `0 < t < 1`.
+Interpolation between two images in the latent space by decoding <img src="https://render.githubusercontent.com/render/math?math=z = z_1 \cdot \left(1-t\right)%2Bz_2 \cdot t"> for several values of <img src="https://render.githubusercontent.com/render/math?math=0 < t < 1">.
 
 <p align="center">
   <img src="figures/image_interpolation_CIFAR10.jpg" width="700">
