@@ -6,14 +6,10 @@ This repository contains the implementation of the different methods we used int
 Project created by: [Yuval Baruch](https://github.com/baruch1192) & [Dan Haramati](https://github.com/DanHrmti)
 
 <p align="center">
-  <img src="figs/model_scheme.png" width="900">
+  <img src="figures/Model_Structure.jpg" width="800">
 </p>
 
 > **General Description:** *The recently introduced Soft Introspective Variational Auto-Encoder (Soft-IntroVAE) is an explicit deep generative model that enjoys the good traits of variational auto-encoders (VAEs) and generative adversarial networks (GANs) by proposing a variational-based approach to adversarial training, and it exhibits outstanding performance in various tasks such as density estimation, image generation and more. However, in adversarial training, it is quite common that the discriminatory module (discriminator in GANs, encoder in Soft-IntroVAE) may overfit at some point to the training data, preventing further improvements for the generative module (generator in GANs, decoder in Soft-IntroVAE). In this project, we researched and implemented different data augmentations and regularization methods with the aim of improving the Soft-Intro VAE model in terms of generation quality on the CIFAR-10 dataset. We achieved our best results using differentiable augmentations on both real and fake data which also act as a regularization and managed to improve the FID score from 4.30 to 2.96 on the CIFAR-10 dataset, further narrowing the gap between VAE based models and GANs. We include our method’s theoretical and empirical justification as well as an analysis of the exact source of our significant improvement. In addition, we present results on downstream tasks our model can be useful for as a consequence of being trained with augmented data.*
-
-<p align="center">
-  <img src="figs/Transformer_based_VAE.png" width="700">
-</p>
 
 [augmentation-enhanced-Soft-Intro-VAE](#augmentation-enhanced-soft-intro-vae)
   1. [Datasets](#datasets)
@@ -36,36 +32,50 @@ For the evaluation and analysis we also used [MNIST](http://yann.lecun.com/exdb/
 
 You should use the `main.py` file with the following arguments:
 
-|Argument                 | Description                                 |Legal Values |
-|-------------------------|---------------------------------------------|-------------|
-|-h, --help               | shows arguments description             		| 			      |
-|-d, --dataset            | dataset to train on 				               	|str: 'cifar10', 'mnist', 'fmnist', 'svhn', 'monsters128', 'celeb128', 'celeb256', 'celeb1024'	|
-|-n, --num_epochs	        | total number of epochs to run			          | int: default=250|
-|-z, --z_dim| latent dimensions										| int: default=128|
-|-s, --seed| random state to use. for random: -1 						| int: -1 , 0, 1, 2 ,....|
-|-v, --num_vae| number of iterations for vanilla vae training 				| int: default=0|
-|-l, --lr| learning rate 												| float: defalut=2e-4 |
-|-r, --beta_rec | beta coefficient for the reconstruction loss |float: default=1.0|
-|-k, --beta_kl| beta coefficient for the kl divergence							| float: default=1.0|
-|-e, --beta_neg| beta coefficient for the kl divergence in the expELBO function | float: default=256.0|
-|-g, --gamma_r| coefficient for the reconstruction loss for fake data in the decoder		| float: default=1e-8|
-|-b, --batch_size| batch size 											| int: default=32 |
-|-p, --pretrained     | path to pretrained model, to continue training	 	|str: default="None"	|
-|-c, --device| device: -1 for cpu, 0 and up for specific cuda device						|int: default=-1|
-|-f, --fid| if specified, FID wil be calculated during training				|bool: default=False|
+|Argument                   | Description                                                                   |Legal Values             |
+|---------------------------|-------------------------------------------------------------------------------|-------------------------|
+|`-h`, `--help`                 | shows arguments description             		                                  | 			                  |
+|`-d`, `--dataset`              | dataset to train on 				               	                                  |str: 'cifar10', 'mnist', 'fmnist', 'svhn', 'monsters128', 'celeb128', 'celeb256', 'celeb1024'	|
+|`-n`, `--num_epochs`	          | total number of epochs to run			                                            | int: default=250        |
+|`-z`, `--z_dim`                | latent dimensions										                                          | int: default=128        |
+|`-s`, `--seed`                 | random state to use. for random: -1 				                                  | int: -1 , 0, 1, 2 ,.... |
+|`-v`, `--num_vae`              | number of iterations for vanilla vae training 				                        | int: default=0          |
+|`-l`, `--lr`                   | learning rate 												                                        | float: defalut=2e-4     |
+|`-r`, `--beta_rec`             | beta coefficient for the reconstruction loss                                  | float: default=1.0      |
+|`-k`, `--beta_kl`              | beta coefficient for the kl divergence							                          | float: default=1.0      |
+|`-e`, `--beta_neg`             | beta coefficient for the kl divergence in the expELBO function                | float: default=256.0    |
+|`-g`, `--gamma_r`              | coefficient for the reconstruction loss for fake data in the decoder		      | float: default=1e-8     |
+|`-b`, `--batch_size`           | batch size 											                                              | int: default=32         |
+|`-p`, `--pretrained`           | path to pretrained model, to continue training	 	                            | str: default="None"	    |
+|`-c`, `--device`               | device: -1 for cpu, 0 and up for specific cuda device						              | int: default=-1         |
+|`-f`, `--fid`                  | if specified, FID wil be calculated during training				                    | bool: default=False     |
+|`--gn_real_sigma`              | standart deviation for gaussian noise added to real data 				              | float: defalut=0.0      |
+|`--nn_sigma_enc`               | size of relative standard deviation of in-layer gaussian noise in the encoder | float: defalut=0.0      |
+|`--nn_sigma_dec`               | size of relative standard deviation of in-layer gaussian noise in the decoder	| float: defalut=0.0      |
+|`--nn_gn_rel`                  | if specified, inlayer guassian noise std will be a learned parameter				  | bool: default=True      |
+|`--p_enc_s`                    | dropout probability after the first layer in the encoder				              | float: defalut=0.0      |
+|`--p_enc_e`                    | dropout probability after the last layer in the encoder				                | float: defalut=0.0      |
+|`--p_dec_s`                    | dropout probability after the first layer in the decoder				              | float: defalut=0.0      |
+|`--p_dec_e`                    | dropout probability after the last layer in the decoder				                | float: defalut=0.0      |
+|`--drop_dis`                   | if specified, Dropout will be disable in the other module during training			| bool: default=False     |
+|`--p_augment`                  | data augmentation probability in each augmentation layer				              | float: defalut=0.0      |
+|`--p_ls_enc`                   | label switch percentage per batch in encoder training  		                    | float: defalut=0.0      |
+|`--p_ls_dec`                   | label switch percentage per batch in decoder training				                  | float: defalut=0.0      |
 
 **Command with recommended hyperparameters**:
 
-CIFAR-10 - `python main.py --dataset cifar10 --device 0 --lr 2e-4 --num_epochs 250 --beta_kl 1.0 --beta_rec 1.0 --beta_neg 256 --z_dim 128 --batch_size 32`
+CIFAR-10 - `python main.py --dataset cifar10 --device 0 --lr 2e-4 --num_epochs 1000 --beta_kl 1.0 --beta_rec 1.0 --beta_neg 256 --z_dim 128 --batch_size 32 --p_augment 0.5`
 
-MNIST -    `python main.py --dataset mnist --device 0 --lr 2e-4 --num_epochs 200 --beta_kl 1.0 --beta_rec 1.0 --beta_neg 256 --z_dim 32 --batch_size 128`
+MNIST -    `python main.py --dataset mnist --device 0 --lr 2e-4 --num_epochs 500 --beta_kl 1.0 --beta_rec 1.0 --beta_neg 256 --z_dim 32 --batch_size 128 --p_augment 0.5`
 
 **Notes**:
+* Our best experiment was with `--p_augment 0.5`, but you can experiment with the other method as well.
 * The optimizer uses a step scheduler for the learning rate, the milestone is set to epoch 350.
 * During training:
     * figures of samples and reconstructions are saved locally.
     * statistics are printed (reconstruction error, KLD, expELBO).
     * at the end of each epoch, a summary of statistics will be printed.
+    * FID can be calculated only on 3 channels images (rgb)
 * Tips:
     * KL of fake/rec samples should be >= KL of real data.
     * It is usually better to choose `beta_kl` >= `beta_rec`.
