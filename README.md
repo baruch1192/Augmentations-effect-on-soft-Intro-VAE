@@ -112,7 +112,7 @@ We believe there were two main sources for this method's success in this setting
 All of the results can be conveniently produced using the provided `S_IntroVAE_Analysis.ipynb` notebook by loading trained models from checkpoints and running the relevant cells.
 
 <h4 align="center">
-    <a href="https://colab.research.google.com/github/baruch1192/augmentation-enhanced-Soft-Intro-VAE/blob/main/analysis"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+    <a href="https://colab.research.google.com/github/baruch1192/augmentation-enhanced-Soft-Intro-VAE"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 </h4>
 
 |                       | Baseline | Ours | SOTA (June 2021) |
