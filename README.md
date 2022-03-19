@@ -6,7 +6,7 @@ This repository contains the implementation of the different methods we used int
 Project created by: [Yuval Baruch](https://github.com/baruch1192) & [Dan Haramati](https://github.com/DanHrmti)
 
 <p align="center">
-  <img src="figures/Model_Structure.jpg" width="800">
+  <img src="figures/model_structure.jpg" width="800">
 </p>
 
 > **General Description:** *The recently introduced Soft Introspective Variational Auto-Encoder (Soft-IntroVAE) is an explicit deep generative model that enjoys the good traits of variational auto-encoders (VAEs) and generative adversarial networks (GANs) by proposing a variational-based approach to adversarial training, and it exhibits outstanding performance in various tasks such as density estimation, image generation and more. However, in adversarial training, it is quite common that the discriminatory module (discriminator in GANs, encoder in Soft-IntroVAE) may overfit at some point to the training data, preventing further improvements for the generative module (generator in GANs, decoder in Soft-IntroVAE). In this project, we researched and implemented different data augmentations and regularization methods with the aim of improving the Soft-Intro VAE model in terms of generation quality on the CIFAR-10 dataset. We achieved our best results using differentiable augmentations on both real and fake data which also act as a regularization and managed to improve the FID score from 4.30 to 2.96 on the CIFAR-10 dataset, further narrowing the gap between VAE based models and GANs. We include our method’s theoretical and empirical justification as well as an analysis of the exact source of our significant improvement. In addition, we present results on downstream tasks our model can be useful for as a consequence of being trained with augmented data.*
@@ -69,7 +69,7 @@ CIFAR-10 - `python main.py --dataset cifar10 --device 0 --lr 2e-4 --num_epochs 1
 MNIST -    `python main.py --dataset mnist --device 0 --lr 2e-4 --num_epochs 500 --beta_kl 1.0 --beta_rec 1.0 --beta_neg 256 --z_dim 32 --batch_size 128 --p_augment 0.5`
 
 **Notes**:
-* Our best experiment was with `--p_augment 0.5`, but you can experiment with the other method as well.
+* Our best experiment was with `--p_augment 0.5`, but you can experiment with the other methods as well.
 * The optimizer uses a step scheduler for the learning rate, the milestone is set to epoch 350.
 * During training:
     * figures of samples and reconstructions are saved locally.
